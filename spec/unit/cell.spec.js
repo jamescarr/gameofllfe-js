@@ -11,9 +11,9 @@ describe 'Evolving a dead cell'
     board.at(1,1).should.be '.'        
   end
 
-  it 'Dead cell with 2 neighbors stays dead'
+  it 'Dead cell with 1 neighbor stays dead'
     var board = createNewGame([
-      ['.','.','.'],
+      ['.','x','.'],
       ['.','.','.'],
       ['.','.','.']            
     ])

@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+  <head>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script type="text/javascript" src="lib/yourlib.js"></script>
+    <script type="text/javascript">
+      function createGrid(size){
+        var grid = []
+        for(var x = 0; x < size; x++){
+          var row = []
+          for(var y = 0; y < size; y++){
+            row.push(Math.random() * 100 > 90?'x':'.')
+          }
+          grid.push(row)        
+        }
+        return grid
+      }
+      
+      $(function(){
+        var canvas = document.getElementById('gameoflife');  
+        var ctx = canvas.getContext('2d');
+
+        var grid = createGrid(150)
+        var game = createNewGame(grid)
+        draw(grid, ctx);
+        
+        setInterval(function(){
+          console.log('evolving')
+          game.evolve(function(cell){
+            if(cell.state == '.'){
+              ctx.fillStyle = 'rgb(0,0,0)'
+            }else if(cell.state == 'x'){
+              ctx.fillStyle = 'rgb(255,255,255)'
+            }
+            ctx.fillRect(cell.location[0], cell.location[1], 1,1)              
+          }, 1000)
+        })
+        // draw grid, initialize game
+      })
+      
+      function draw(grid, ctx){
+        grid.forEach(function(row, x){
+          row.forEach(function(cell, y){
+            if(cell == 'x')
+              ctx.fillRect(x,y,1,1)
+          })
+        })
+      }
+    </script>
+  </head>
+  <body>
+    <canvas id="gameoflife" width="150" height="150">
+    
+    <input type="button" value="start">
+  </body>
+</html>

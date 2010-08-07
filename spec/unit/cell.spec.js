@@ -1,5 +1,4 @@
 describe 'Game of Life'
-
   describe 'Evolving a live cell'
     it 'should continue living with 2 neighbors'
       var board = createNewGame([
@@ -130,7 +129,6 @@ describe 'Game of Life'
     end
     
     it 'should evolve dead cell in corner with 3 neighbors'
-      print('running dead cell in corner with 3 neighbors');
       var board = createNewGame([
         ['.','x','.'],
         ['x','x','.'],
@@ -176,6 +174,37 @@ describe 'Game of Life'
       board.evolve()
       
       board.at(1,1).should.be '.'        
+    end
+  end
+  
+  describe 'Evolution Hooks'
+    it 'should invoke callback when a cell state changes'
+      var board = createNewGame([
+        ['.','x','.'],
+        ['x','x','.'],
+        ['.','.','.']            
+      ])
+      
+      var cells = []
+      board.evolve(function(c){
+        cells.push(c)
+      })
+      cells[0].state.should.eql 'x'
+      cells[0].location.should.eql [0,0]
+    end
+    
+    it 'should not invoke callback when no cells change state'
+      var board = createNewGame([
+        ['x','x','.'],
+        ['x','x','.'],
+        ['.','.','.']            
+      ])
+      
+      var cbCalled = false
+      board.evolve(function(c){
+        cbCalled = true
+      })
+      cbCalled.should.be false
     end
   end
 end

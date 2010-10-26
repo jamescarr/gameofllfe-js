@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"0>
+  
+    <title>Index</title>
+    <script src="src/GameOfLife.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+
+    <script type="text/javascript" charset="utf-8">
+      var game = new GameOfLife()
+      $(function(){
+        var cellSize = 20
+        var canvas = document.getElementById('board');
+        var board = new VisualBoard(canvas.getContext('2d'), cellSize);
+        var initialyLiveCells = []
+        $(canvas).click(function(evt){
+          var x= evt.offsetX
+          x = (x - x%cellSize) / cellSize
+          var y= evt.offsetY
+          y = (y - y%cellSize) / cellSize
+          board.toggle([x,y], true);
+          initialyLiveCells.push([x,y])
+        })
+        $('#randomize').click(function(){
+          initialyLiveCells = []
+          for(var i = 0; i < canvas.width/cellSize; i++){
+            for(var j = 0; j < canvas.height/cellSize; j++){
+                var turnOn = (Math.random() * 100) % 2 > 1
+                board.toggle([i, j], turnOn)
+                if(turnOn) initialyLiveCells.push([i,j])
+            }
+          }
+        })
+        $('#start').click(function(){
+          game = new GameOfLife({height:canvas.height/cellSize, width:canvas.width/cellSize}, initialyLiveCells)
+          var interval = setInterval(function(){
+            game.tick(function(evt){
+              board.toggle(evt.location, evt.status)
+            })
+          }, 200)
+          
+          $('#stop').click(function(){
+            clearInterval(interval)
+          })
+        })
+        
+      })
+    
+    </script>
+ </head>
+  <body>
+    <canvas id="board" width="1200" height="600" style="border:1px solid #000;"></canvas>
+    <br>
+    <button id="randomize">Randomize</button>
+    <button id="start">Start</button>
+    <button id="stop">Stop</button>
+  </body>
+</html>
